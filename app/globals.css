@@ -1,26 +1,160 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: #1c1c1a;
+  --color-surface: #242421;
+  --color-border: #3a3a36;
+  --color-text-primary: #f5f5f0;
+  --color-text-secondary: #a0a09a;
+  --color-accent: #8b5cf6;
+  --color-success: #65a30d;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.15) 75%
+  );
+  background-size: 400px 100%;
+}
+
+.skeleton-line-sm {
+  height: 10px;
+  border-radius: 3px;
+}
+
+.skeleton-line-lg {
+  height: 18px;
+  border-radius: 4px;
+}
+
+.skeleton-line-xl {
+  height: 24px;
+  border-radius: 5px;
+  width: 55%;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.progress-step .indicator {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #3a3a36;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #3a3a36;
+  border-radius: 3px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #4a4a46;
+}
+
+.resume-preview {
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+.resume-preview h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.125rem;
+  color: #f5f5f0;
+  letter-spacing: -0.02em;
+}
+.resume-preview h2 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid #3a3a36;
+  color: #f5f5f0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.resume-preview h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 0.875rem;
+  margin-bottom: 0.25rem;
+  color: #e8e8e3;
+}
+.resume-preview p {
+  margin-bottom: 0.375rem;
+  color: #a0a09a;
+}
+.resume-preview ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 0.375rem;
+}
+.resume-preview li {
+  margin-bottom: 0.25rem;
+  color: #a0a09a;
+}
+.resume-preview li::marker {
+  color: #52524e;
+}
+.resume-preview strong {
+  color: #e8e8e3;
+  font-weight: 600;
+}
+.resume-preview a {
+  color: #8b5cf6;
+  text-decoration: none;
+}
+.resume-preview a:hover {
+  text-decoration: underline;
+}
+.resume-preview .contact-line {
+  color: #a0a09a;
+  font-size: 0.8125rem;
+  margin-bottom: 0.75rem;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .resume-print-area,
+  .resume-print-area * {
+    visibility: visible;
+  }
+  .resume-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white;
+    color: black;
+    padding: 2rem;
+  }
 }
