@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
     const providerType = formData.get("provider") as ProviderType | null
     const apiKey = formData.get("apiKey") as string | null
     const baseUrl = formData.get("baseUrl") as string | null
+    const model = formData.get("model") as string | null
 
     if (!pdfFile) {
       return Response.json({ error: "PDF do currículo é obrigatório" }, { status: 400 })
@@ -34,6 +35,7 @@ export async function POST(request: NextRequest) {
       provider: providerType || undefined,
       apiKey: apiKey || undefined,
       baseUrl: baseUrl || undefined,
+      model: model || undefined,
     })
     const prompt = buildPrompt(resumeText, jobDescription)
 

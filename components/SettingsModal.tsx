@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { PROVIDERS, type Settings } from "@/lib/constants"
+import { PROVIDERS, DEFAULT_MODELS, type Settings } from "@/lib/constants"
 
 interface SettingsModalProps {
   open: boolean
@@ -14,6 +14,10 @@ interface SettingsModalProps {
 export function SettingsModal({ open, settings, onClose, onSave }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState<Settings>(settings)
   const [showKey, setShowKey] = useState(false)
+
+  const currentProvider = localSettings.provider
+  const currentPlaceholder = PROVIDERS.find((p) => p.value === currentProvider)?.placeholder || ""
+  const defaultModel = DEFAULT_MODELS[currentProvider] || ""
 
   const handleSave = () => {
     onSave(localSettings)
@@ -59,13 +63,26 @@ export function SettingsModal({ open, settings, onClose, onSave }: SettingsModal
                 </label>
                 <select
                   value={localSettings.provider}
-                  onChange={(e) => setLocalSettings((s) => ({ ...s, provider: e.target.value, baseUrl: "" }))}
+                  onChange={(e) => setLocalSettings((s) => ({ ...s, provider: e.target.value, baseUrl: "", model: "" }))}
                   className="h-10 w-full rounded-lg border border-border bg-bg px-3 text-sm text-text-primary outline-none transition-colors focus:border-accent/60"
                 >
                   {PROVIDERS.map((p) => (
                     <option key={p.value} value={p.value}>{p.label}</option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-[11px] font-medium tracking-[0.08em] text-text-secondary uppercase">
+                  Modelo
+                </label>
+                <input
+                  type="text"
+                  value={localSettings.model}
+                  onChange={(e) => setLocalSettings((s) => ({ ...s, model: e.target.value }))}
+                  placeholder={defaultModel || "gpt-4o-mini"}
+                  className="h-10 w-full rounded-lg border border-border bg-bg px-3 text-sm text-text-primary placeholder-text-secondary/40 outline-none transition-colors focus:border-accent/60"
+                />
               </div>
 
               <div>
@@ -77,7 +94,7 @@ export function SettingsModal({ open, settings, onClose, onSave }: SettingsModal
                     type={showKey ? "text" : "password"}
                     value={localSettings.apiKey}
                     onChange={(e) => setLocalSettings((s) => ({ ...s, apiKey: e.target.value }))}
-                    placeholder={PROVIDERS.find((p) => p.value === localSettings.provider)?.placeholder}
+                    placeholder={currentPlaceholder}
                     className="h-10 w-full rounded-lg border border-border bg-bg pr-9 pl-3 text-sm text-text-primary placeholder-text-secondary/40 outline-none transition-colors focus:border-accent/60"
                   />
                   <button
@@ -100,7 +117,7 @@ export function SettingsModal({ open, settings, onClose, onSave }: SettingsModal
                 </div>
               </div>
 
-              {(localSettings.provider === "deepseek" || localSettings.provider === "ollama") && (
+              {(localSettings.provider === "deepseek" || localSettings.provider === "ollama" || localSettings.provider === "groq") && (
                 <div>
                   <label className="mb-1.5 block text-[11px] font-medium tracking-[0.08em] text-text-secondary uppercase">
                     Base URL
@@ -109,7 +126,13 @@ export function SettingsModal({ open, settings, onClose, onSave }: SettingsModal
                     type="text"
                     value={localSettings.baseUrl}
                     onChange={(e) => setLocalSettings((s) => ({ ...s, baseUrl: e.target.value }))}
-                    placeholder={localSettings.provider === "deepseek" ? "https://api.deepseek.com/v1" : "http://localhost:11434/v1"}
+                    placeholder={
+                      localSettings.provider === "groq"
+                        ? "https://api.groq.com/openai/v1"
+                        : localSettings.provider === "deepseek"
+                          ? "https://api.deepseek.com/v1"
+                          : "http://localhost:11434/v1"
+                    }
                     className="h-10 w-full rounded-lg border border-border bg-bg px-3 text-sm text-text-primary placeholder-text-secondary/40 outline-none transition-colors focus:border-accent/60"
                   />
                 </div>

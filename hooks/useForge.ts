@@ -31,6 +31,7 @@ export function useForge(settings: Settings) {
         formData.append("provider", settings.provider)
         formData.append("apiKey", settings.apiKey)
         formData.append("baseUrl", settings.baseUrl)
+        formData.append("model", settings.model)
 
         const res = await fetch("/api/forge", {
           method: "POST",

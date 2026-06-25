@@ -13,6 +13,7 @@ export function useSettings() {
           provider: parsed.provider || DEFAULT_SETTINGS.provider,
           apiKey: parsed.apiKey || DEFAULT_SETTINGS.apiKey,
           baseUrl: parsed.baseUrl || DEFAULT_SETTINGS.baseUrl,
+          model: parsed.model || DEFAULT_SETTINGS.model,
         }
       }
     } catch {}
