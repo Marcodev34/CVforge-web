@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useCallback, useState } from "react"
+import { useRef, useCallback, useState, useId } from "react"
 import { motion } from "framer-motion"
 
 interface FileUploadProps {
@@ -11,6 +11,7 @@ interface FileUploadProps {
 
 export function FileUpload({ pdfFile, pdfName, onFileChange }: FileUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const inputId = useId()
   const [isDragOver, setIsDragOver] = useState(false)
 
   const handleDrop = useCallback(
@@ -38,7 +39,6 @@ export function FileUpload({ pdfFile, pdfName, onFileChange }: FileUploadProps) 
 
   const removeFile = useCallback(() => {
     onFileChange(null)
-    if (fileInputRef.current) fileInputRef.current.value = ""
   }, [onFileChange])
 
   return (
@@ -50,8 +50,7 @@ export function FileUpload({ pdfFile, pdfName, onFileChange }: FileUploadProps) 
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onClick={() => !pdfFile && fileInputRef.current?.click()}
-        className={`cursor-pointer rounded-lg border transition-all ${
+        className={`rounded-lg border transition-all ${
           isDragOver
             ? "border-accent bg-accent/10"
             : pdfFile
@@ -59,21 +58,8 @@ export function FileUpload({ pdfFile, pdfName, onFileChange }: FileUploadProps) 
               : "border-border bg-bg hover:border-text-secondary/40"
         }`}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".pdf,application/pdf"
-          className="hidden"
-          onChange={(e) => onFileChange(e.target.files?.[0] || null)}
-        />
-
         {pdfFile ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2 }}
-            className="flex items-center gap-3 p-3"
-          >
+          <div className="flex items-center gap-3 p-3">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-accent flex-shrink-0">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M14 2v6h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -85,7 +71,7 @@ export function FileUpload({ pdfFile, pdfName, onFileChange }: FileUploadProps) 
               </span>
             </div>
             <button
-              onClick={(e) => { e.stopPropagation(); removeFile() }}
+              onClick={removeFile}
               className="flex-shrink-0 rounded p-1 text-text-secondary transition-colors hover:bg-border hover:text-text-primary"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -93,13 +79,11 @@ export function FileUpload({ pdfFile, pdfName, onFileChange }: FileUploadProps) 
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="flex items-center gap-3 p-3"
+          <label
+            htmlFor={inputId}
+            className="flex cursor-pointer items-center gap-3 p-3"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="flex-shrink-0 text-text-secondary">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -108,9 +92,17 @@ export function FileUpload({ pdfFile, pdfName, onFileChange }: FileUploadProps) 
             <span className="text-sm text-text-secondary">
               Arraste o PDF ou clique para upload
             </span>
-          </motion.div>
+          </label>
         )}
       </div>
+      <input
+        ref={fileInputRef}
+        id={inputId}
+        type="file"
+        accept=".pdf,application/pdf"
+        className="hidden"
+        onChange={(e) => onFileChange(e.target.files?.[0] || null)}
+      />
     </div>
   )
 }

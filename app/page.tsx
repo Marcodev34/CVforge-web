@@ -24,7 +24,7 @@ export default function Home() {
     if (file && file.type === "application/pdf") {
       setPdfFile(file)
       setPdfName(file.name)
-    } else if (file) {
+    } else {
       setPdfFile(null)
       setPdfName(null)
     }
